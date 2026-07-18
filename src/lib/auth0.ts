@@ -3,7 +3,7 @@ import type { User as Auth0User } from "@auth0/nextjs-auth0/types";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-async function generateUniqueUsername(base: string) {
+export async function generateUniqueUsername(base: string) {
   const normalized = base.toLowerCase().replace(/[^a-z0-9_]/g, "") || "user";
 
   let candidate = normalized;
@@ -15,12 +15,14 @@ async function generateUniqueUsername(base: string) {
   return candidate;
 }
 
-async function syncUserFromAuth0(user: Auth0User) {
+export async function syncUserFromAuth0(user: Auth0User) {
   if (!user.email) return;
 
   const displayName = user.name ?? user.nickname ?? user.email;
 
-  const existing = await prisma.user.findUnique({ where: { auth0Id: user.sub } });
+  const existing = await prisma.user.findUnique({
+    where: { auth0Id: user.sub },
+  });
   if (existing) {
     await prisma.user.update({
       where: { auth0Id: user.sub },
@@ -29,7 +31,9 @@ async function syncUserFromAuth0(user: Auth0User) {
     return;
   }
 
-  const username = await generateUniqueUsername(user.nickname ?? user.email.split("@")[0]);
+  const username = await generateUniqueUsername(
+    user.nickname ?? user.email.split("@")[0],
+  );
   await prisma.user.create({
     data: { auth0Id: user.sub, email: user.email, username, displayName },
   });
