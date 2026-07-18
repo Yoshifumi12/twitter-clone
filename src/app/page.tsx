@@ -1,6 +1,9 @@
 import Image from "next/image";
+import { auth0 } from "@/lib/auth0";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth0.getSession();
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -12,6 +15,36 @@ export default function Home() {
           height={20}
           priority
         />
+        <div className="flex flex-col items-center gap-4 text-center sm:items-start sm:text-left">
+          {session ? (
+            <>
+              <p className="text-zinc-600 dark:text-zinc-400">
+                Logged in as {session.user.email}
+              </p>
+              <a
+                href="/auth/logout"
+                className="font-medium text-zinc-950 dark:text-zinc-50"
+              >
+                Logout
+              </a>
+            </>
+          ) : (
+            <>
+              <a
+                href="/auth/login?screen_hint=signup"
+                className="font-medium text-zinc-950 dark:text-zinc-50"
+              >
+                Signup
+              </a>
+              <a
+                href="/auth/login"
+                className="font-medium text-zinc-950 dark:text-zinc-50"
+              >
+                Login
+              </a>
+            </>
+          )}
+        </div>
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
