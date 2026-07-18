@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/form/FormInput";
+import ErrorMessage from "@/components/form/ErrorMessage";
 import { signInAction, signUpAction, type PasswordResult } from "./actions";
 import { signInSchema, signUpSchema } from "@/lib/validations/auth";
 
@@ -116,6 +117,7 @@ function SignUpForm({ email }: { email: string }) {
         className="flex flex-col gap-3"
       >
         <input type="hidden" name="email" value={email} />
+        <ErrorMessage message={fields.email.errors} />
         <FormInput
           field={fields.password}
           label="Password"

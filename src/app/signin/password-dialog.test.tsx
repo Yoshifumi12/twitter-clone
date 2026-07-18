@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { parseWithZod } from "@conform-to/zod/v4";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { signInSchema } from "@/lib/validations/auth";
+import { signInSchema, signUpSchema } from "@/lib/validations/auth";
 import { PasswordDialog } from "./password-dialog";
 
 function signInErrorResult(
@@ -17,6 +17,17 @@ function signInErrorResult(
     throw new Error("expected a successful parse for this test fixture");
   }
   return submission.reply({ fieldErrors: { password: [message] } });
+}
+
+function signUpErrorResult(email: string, password: string, message: string) {
+  const data = new FormData();
+  data.set("email", email);
+  data.set("password", password);
+  const submission = parseWithZod(data, { schema: signUpSchema });
+  if (submission.status !== "success") {
+    throw new Error("expected a successful parse for this test fixture");
+  }
+  return submission.reply({ fieldErrors: { email: [message] } });
 }
 
 const { signInActionMock, signUpActionMock } = vi.hoisted(() => ({
@@ -116,5 +127,32 @@ describe("PasswordDialog in sign-up mode", () => {
     const submittedData = signUpActionMock.mock.calls[0][1] as FormData;
     expect(submittedData.get("email")).toBe("new@example.com");
     expect(submittedData.get("password")).toBe("Abcd1234");
+  });
+
+  it("displays the error returned by signUpAction", async () => {
+    signUpActionMock.mockResolvedValue(
+      signUpErrorResult(
+        "new@example.com",
+        "Abcd1234",
+        "An account with this email already exists.",
+      ),
+    );
+    render(
+      <PasswordDialog
+        open
+        onOpenChange={vi.fn()}
+        mode="sign-up"
+        email="new@example.com"
+      />,
+    );
+
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "Abcd1234" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
+
+    expect(
+      await screen.findByText("An account with this email already exists."),
+    ).toBeInTheDocument();
   });
 });
