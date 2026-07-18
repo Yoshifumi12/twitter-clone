@@ -10,5 +10,11 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
     exclude: ["**/node_modules/**", "**/e2e/**"],
+    env: {
+      AUTH0_DOMAIN: "test.auth0.local",
+      AUTH0_CLIENT_ID: "test-client-id",
+      AUTH0_CLIENT_SECRET: "test-client-secret",
+      AUTH0_DB_CONNECTION: "Username-Password-Authentication",
+    },
   },
 });
