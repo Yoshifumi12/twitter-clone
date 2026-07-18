@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Auth0 credentials
 .env.local
+
+/src/generated/prisma
