@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
@@ -38,6 +39,14 @@ export function Nav({ displayName, username }: NavProps) {
   return (
     <nav className="flex w-64 shrink-0 flex-col justify-between border-r border-zinc-200 py-4 dark:border-zinc-800">
       <div className="flex flex-col gap-1">
+        <Link
+          href="/"
+          aria-label="Yapper"
+          className="mb-2 flex size-12 items-center justify-center self-start rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900"
+        >
+          <Logo className="size-8" />
+        </Link>
+
         {items.map(({ label, href, icon: Icon }) => {
           const isActive = pathname === href;
 
