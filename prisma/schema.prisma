@@ -20,4 +20,26 @@ model User {
   displayName String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  yaps        Yap[]
+}
+
+enum YapStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Yap {
+  id        String    @id @default(cuid())
+  content   String
+  status    YapStatus @default(PUBLISHED)
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id])
+  parentId  String?
+  parent    Yap?      @relation("YapReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Yap[]     @relation("YapReplies")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([authorId, status])
+  @@index([parentId])
 }

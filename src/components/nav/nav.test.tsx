@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Nav } from "./nav";
@@ -6,6 +7,10 @@ const { usePathnameMock } = vi.hoisted(() => ({ usePathnameMock: vi.fn() }));
 
 vi.mock("next/navigation", () => ({
   usePathname: usePathnameMock,
+}));
+
+vi.mock("@/components/yap/compose-dialog", () => ({
+  ComposeDialog: ({ trigger }: { trigger: ReactNode }) => trigger,
 }));
 
 beforeEach(() => {
@@ -70,10 +75,10 @@ describe("Nav", () => {
     expect(inactiveIcon).toHaveAttribute("fill", "none");
   });
 
-  it("renders a Post button", () => {
+  it("renders a Yap button", () => {
     render(<Nav displayName="Ada Lovelace" username="ada" />);
 
-    expect(screen.getByRole("button", { name: /post/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /yap/i })).toBeInTheDocument();
   });
 
   it("shows the current user's display name and @username", () => {

@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
+import { ComposeDialog } from "@/components/yap/compose-dialog";
 import {
   Popover,
   PopoverTrigger,
@@ -74,9 +75,16 @@ export function Nav({ displayName, username }: NavProps) {
           );
         })}
 
-        <Button className="mt-4 !h-12 w-6/7 rounded-full font-bold" size="lg">
-          <p className="items-center text-lg">Post</p>
-        </Button>
+        <ComposeDialog
+          trigger={
+            <Button
+              className="mt-4 !h-12 w-6/7 rounded-full font-bold"
+              size="lg"
+            >
+              <p className="items-center text-lg">Yap</p>
+            </Button>
+          }
+        />
       </div>
 
       <Popover>
