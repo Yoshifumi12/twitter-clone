@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Nav } from "./nav";
 
@@ -55,6 +55,21 @@ describe("Nav", () => {
     );
   });
 
+  it("fills only the icon matching the current route", () => {
+    usePathnameMock.mockReturnValue("/explore");
+    render(<Nav displayName="Ada Lovelace" username="ada" />);
+
+    const activeIcon = screen
+      .getByRole("link", { name: "Explore" })
+      .querySelector("svg");
+    const inactiveIcon = screen
+      .getByRole("link", { name: "Home" })
+      .querySelector("svg");
+
+    expect(activeIcon).toHaveAttribute("fill", "currentColor");
+    expect(inactiveIcon).toHaveAttribute("fill", "none");
+  });
+
   it("renders a Post button", () => {
     render(<Nav displayName="Ada Lovelace" username="ada" />);
 
@@ -66,5 +81,37 @@ describe("Nav", () => {
 
     expect(screen.getByText("Ada Lovelace")).toBeInTheDocument();
     expect(screen.getByText("@ada")).toBeInTheDocument();
+  });
+
+  it("does not show the account menu until it is opened", () => {
+    render(<Nav displayName="Ada Lovelace" username="ada" />);
+
+    expect(
+      screen.queryByRole("link", { name: "Log out @ada" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("opens an account menu with a log out option when the account block is clicked", () => {
+    render(<Nav displayName="Ada Lovelace" username="ada" />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /ada lovelace.*@ada/i }),
+    );
+
+    const logOutLink = screen.getByRole("link", { name: "Log out @ada" });
+    expect(logOutLink).toBeInTheDocument();
+    expect(logOutLink).toHaveAttribute("href", "/logout");
+  });
+
+  it("scopes the log out option to the current user", () => {
+    render(<Nav displayName="Grace Hopper" username="grace" />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /grace hopper.*@grace/i }),
+    );
+
+    expect(
+      screen.getByRole("link", { name: "Log out @grace" }),
+    ).toBeInTheDocument();
   });
 });
