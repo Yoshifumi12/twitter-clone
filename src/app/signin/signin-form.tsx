@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useActionState, useState } from "react";
 import { useForm, getFormProps, getInputProps } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod/v4";
@@ -42,7 +43,7 @@ export function SignInForm() {
         variant="outline"
         className="min-h-12 w-full rounded-full border-black bg-white text-black hover:bg-neutral-100 hover:text-black dark:border-black dark:bg-white dark:text-black dark:hover:bg-neutral-100 dark:hover:text-black"
       >
-        <a href="/auth/login?connection=google-oauth2">
+        <Link href="/auth/login?connection=google-oauth2">
           <Image
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
             alt="Google"
@@ -50,7 +51,7 @@ export function SignInForm() {
             height={16}
           />
           Continue with Google
-        </a>
+        </Link>
       </Button>
 
       <div className="flex items-center gap-3">
