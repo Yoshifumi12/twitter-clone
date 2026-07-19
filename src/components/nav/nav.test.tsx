@@ -46,6 +46,15 @@ describe("Nav", () => {
     );
   });
 
+  it("links the logo to the home route", () => {
+    render(<Nav displayName="Ada Lovelace" username="ada" />);
+
+    expect(screen.getByRole("link", { name: "Yapper" })).toHaveAttribute(
+      "href",
+      "/",
+    );
+  });
+
   it("renders a Post button", () => {
     render(<Nav displayName="Ada Lovelace" username="ada" />);
 
