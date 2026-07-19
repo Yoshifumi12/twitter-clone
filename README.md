@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Twitter Clone
+
+A Twitter-style app built on Next.js (App Router), with Auth0 authentication and a Postgres/Prisma data layer.
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   npm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Create `.env.local` with the required Auth0 and database variables:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   - `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`, `AUTH0_DB_CONNECTION`
+   - `DATABASE_URL` (Postgres connection string for Prisma)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Apply database migrations and generate the Prisma client:
 
-## Learn More
+   ```bash
+   npx prisma migrate dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. Start the dev server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) to see the app. Signed-in routes live under the `(app)` route group and redirect to `/signin` without a session.
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `npm run dev` — start the dev server
+- `npm run build` — production build
+- `npm run start` — run the production build
+- `npm run lint` — ESLint
+- `npm run format` / `npm run format:check` — Prettier
+- `npm test` — Vitest unit/component tests
+- `npm run test:e2e` — Playwright end-to-end tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Stack
+
+- **Framework**: Next.js 16 (App Router), React 19
+- **Styling**: Tailwind CSS v4
+- **Auth**: Auth0 (`@auth0/nextjs-auth0`)
+- **Database**: PostgreSQL via Prisma 7 (`@prisma/adapter-pg`), schema at [prisma/schema.prisma](prisma/schema.prisma)
+- **Forms**: Conform + Zod
+- **UI primitives**: Radix UI
+- **Testing**: Vitest (unit/component) and Playwright (e2e)
+
+> **Note for AI coding agents**: see [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md) — this project pins a Next.js version whose App Router APIs have diverged from most models' training data.
