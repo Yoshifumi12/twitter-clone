@@ -10,10 +10,16 @@ import {
   MessageCircle,
   Bookmark,
   User,
+  Ellipsis,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
@@ -59,7 +65,10 @@ export function Nav({ displayName, username }: NavProps) {
                 isActive && "font-bold",
               )}
             >
-              <Icon className="size-6" />
+              <Icon
+                className="size-6"
+                fill={isActive ? "currentColor" : "none"}
+              />
               {label}
             </Link>
           );
@@ -70,15 +79,33 @@ export function Nav({ displayName, username }: NavProps) {
         </Button>
       </div>
 
-      <div className="flex items-center gap-3 rounded-full p-3 hover:bg-zinc-100 dark:hover:bg-zinc-900">
-        <div className="size-10 shrink-0 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-        <div className="flex min-w-0 flex-col">
-          <span className="truncate text-sm font-semibold">{displayName}</span>
-          <span className="truncate text-sm text-zinc-500 dark:text-zinc-400">
-            @{username}
-          </span>
-        </div>
-      </div>
+      <Popover>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            className="flex w-full cursor-pointer items-center gap-3 rounded-full p-3 text-left hover:bg-zinc-100 dark:hover:bg-zinc-900"
+          >
+            <div className="size-10 shrink-0 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+            <div className="flex min-w-0 flex-1 flex-col">
+              <span className="truncate text-sm font-semibold">
+                {displayName}
+              </span>
+              <span className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+                @{username}
+              </span>
+            </div>
+            <Ellipsis className="size-5 shrink-0" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent align="end" side="top" className="w-72">
+          <Link
+            href="/logout"
+            className="block rounded-md px-3 py-2 text-sm font-semibold hover:bg-zinc-100 dark:hover:bg-zinc-900"
+          >
+            Log out @{username}
+          </Link>
+        </PopoverContent>
+      </Popover>
     </nav>
   );
 }
